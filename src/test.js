@@ -1,5 +1,5 @@
 function generateMessage(){
-    return "webpackkkkkkkkkkk"
+    return "webpackk configggg"
 }
 
 export default generateMessage
