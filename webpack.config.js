@@ -1,5 +1,7 @@
 const path = require("path");
 const HtmlWebpackplugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 
 module.exports = {
   mode: "development",
@@ -7,7 +9,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name][contenthash].js", // for caching
-    clean:true //so that more hash files are not generated for the same file if something chnages
+    clean:true, //so that more hash files are not generated for the same file if something chnages
+    assetModuleFilename: "[name][ext]" // so that name remains same after build
   },
   devServer:{
     static:{
@@ -19,11 +22,14 @@ module.exports = {
     compress:true,
     historyApiFallback:true
   },
+  resolve:{
+    extensions: ['.js','.jsx','.ts','.tsx'] // to import files without extension
+  },
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: ['style-loader','css-loader','sass-loader']
+        test: /\.(css|scss|sass)$/,
+        use: [MiniCssExtractPlugin.loader,'css-loader','sass-loader']
       },
       {
         test: /\.js$/,
@@ -35,9 +41,14 @@ module.exports = {
           }
         }
       },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i, // importing images
+        type: 'asset/resource',
+      },
     ],
   },
   plugins:[
+    new MiniCssExtractPlugin(), // to create new css file
     new HtmlWebpackplugin({
       title: "Webpack App plugin",
       filename:"index.html",
